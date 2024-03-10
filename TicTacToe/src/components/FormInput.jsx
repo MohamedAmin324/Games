@@ -1,6 +1,14 @@
 // eslint-disable-next-line react/prop-types
-export default function FormInput({ formLabel, options, updateInfo }) {
-	const handleClick = (e) => updateInfo(e.target.value);
+export default function FormInput({ formLabel, options, updateSettings }) {
+	const handleClick = (e) => {
+		const selectedSettings = ['true', 'false'].includes(e.target.value)
+			? e.target.value === 'true'
+			: e.target.value;
+		const changedParameter = e.target.name;
+		const updatedInfo = {};
+		updatedInfo[changedParameter] = selectedSettings;
+		updateSettings(updatedInfo);
+	};
 
 	return (
 		<div className='container form-container'>
@@ -10,7 +18,7 @@ export default function FormInput({ formLabel, options, updateInfo }) {
 			{options.map(({ htmlFor, labelText, ...inputSettings }, index) => (
 				<label key={index} htmlFor={htmlFor}>
 					{labelText}
-					<input onChange={handleClick} type="radio" {...inputSettings} />
+					<input onChange={handleClick} type='radio' {...inputSettings} />
 				</label>
 			))}
 		</div>

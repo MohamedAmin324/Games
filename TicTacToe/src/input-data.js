@@ -15,4 +15,38 @@ const signOptions = [
     }
 ]
 
-export { signOptions };
+const modeOptions = [
+    {
+        htmlFor: "single-player",
+        id: "single-player",
+        name: "mode",
+        value: "single-player",
+        labelText: "single-player (against the computer)",
+    },
+    {
+        htmlFor: "2-players",
+        id: "2-players",
+        name: "mode",
+        value: "2-players",
+        labelText: "2 players",
+    }
+]
+
+const turnsOptions = [
+    {
+        htmlFor: "go-first",
+        id: "go-first",
+        name: "userTurn",
+        value: "true",
+        labelText: "Yes",
+    },
+    {
+        htmlFor: "go-second",
+        id: "go-second",
+        name: "userTurn",
+        value: "false",
+        labelText: "No",
+    }
+]
+
+export { signOptions, modeOptions, turnsOptions };
