@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import FormInput from './components/FormInput';
+import { signOptions } from './input-data';
 
 export default function App() {
 	const [gameState, setGameState] = useState([
@@ -49,12 +50,12 @@ export default function App() {
 			signRef.current = signRef.current === 'X' ? 'O' : 'X';
 			setUserTurn(true);
 		}, 500);
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isUserTurn]);
 
 	return (
 		<>
-			<FormInput updateSignRef={updateSignRef} />
+			<FormInput formLabel="choose a sign:" updateInfo={updateSignRef} options={signOptions} />
 			<div className='container'>
 				{gameState.map(({ sign, colorValue }, index) => (
 					<div
