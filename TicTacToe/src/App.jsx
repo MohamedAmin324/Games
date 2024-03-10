@@ -3,15 +3,15 @@ import FormInput from './components/FormInput';
 
 export default function App() {
 	const [gameState, setGameState] = useState([
-		'',
-		'',
-		'',
-		'',
-		'',
-		'',
-		'',
-		'',
-		'',
+		{ sign: '', colorValue: '' },
+		{ sign: '', colorValue: '' },
+		{ sign: '', colorValue: '' },
+		{ sign: '', colorValue: '' },
+		{ sign: '', colorValue: '' },
+		{ sign: '', colorValue: '' },
+		{ sign: '', colorValue: '' },
+		{ sign: '', colorValue: '' },
+		{ sign: '', colorValue: '' },
 	]);
 
 	const [isUserTurn, setUserTurn] = useState(true);
@@ -23,10 +23,11 @@ export default function App() {
 	function handleClick(e) {
 		if (!isUserTurn) return;
 		if (signRef.current === '') return;
-		if (gameState.every((signValue) => signValue !== '')) return;
+		if (gameState.every(({ sign }) => sign !== '')) return;
 
 		const itemIndex = e.target.dataset.index;
-		gameState[itemIndex] = signRef.current;
+		gameState[itemIndex].sign = signRef.current;
+		gameState[itemIndex].colorValue = signRef.current === 'X' ? 'red' : 'blue';
 		setGameState([...gameState]);
 		signRef.current = signRef.current === 'X' ? 'O' : 'X';
 		setUserTurn(false);
@@ -34,32 +35,36 @@ export default function App() {
 
 	useEffect(() => {
 		if (isUserTurn) return;
-		if (gameState.every((signValue) => signValue !== '')) return;
+		if (gameState.every(({ sign }) => sign !== '')) return;
 		let computerChoice;
 		do {
 			computerChoice = Math.floor(Math.random() * 8);
-		} while (gameState[computerChoice] !== '');
+		} while (gameState[computerChoice].sign !== '');
 
 		setTimeout(() => {
-			gameState[computerChoice] = signRef.current;
+			gameState[computerChoice].sign = signRef.current;
+			gameState[computerChoice].colorValue =
+				signRef.current === 'X' ? 'red' : 'blue';
 			setGameState([...gameState]);
 			signRef.current = signRef.current === 'X' ? 'O' : 'X';
 			setUserTurn(true);
 		}, 500);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isUserTurn]);
 
 	return (
 		<>
 			<FormInput updateSignRef={updateSignRef} />
 			<div className='container'>
-				{gameState.map((value, index) => (
+				{gameState.map(({ sign, colorValue }, index) => (
 					<div
 						onClick={handleClick}
 						className='item'
 						data-index={index}
 						key={index}
+						style={{ color: colorValue }}
 					>
-						{value}
+						{sign}
 					</div>
 				))}
 			</div>
