@@ -191,25 +191,30 @@ export default function Game() {
 
 	return (
 		<>
-			<FormInput
-				formLabel='choose a play mode:'
-				options={modeOptions}
-				updateSettings={updateSettings}
-			/>
-			{settings.mode === 'single-player' && (
+			<div className=''>
+				<h1 className='oswald'>Tic Tac Toe</h1>
 				<FormInput
-					formLabel='Do you want to go first?:'
-					options={turnsOptions}
+					formLabel='choose a play mode:'
+					options={modeOptions}
 					updateSettings={updateSettings}
 				/>
-			)}
-			<FormInput
-				formLabel='choose a sign:'
-				setUserSign={setUserSign}
-				updateSettings={updateSettings}
-				options={signOptions}
-			/>
-			<div className='container'>
+				{settings.mode === 'single-player' && (
+					<FormInput
+						formLabel='Do you want to go first?:'
+						options={turnsOptions}
+						updateSettings={updateSettings}
+					/>
+				)}
+				<FormInput
+					formLabel='choose a sign:'
+					setUserSign={setUserSign}
+					updateSettings={updateSettings}
+					options={signOptions}
+				/>
+				<p className='result-panel'>{result}</p>
+			</div>
+
+			<div className='container grid-container'>
 				{gameState.map(({ sign, colorValue }, index) => (
 					<div
 						onClick={handleClick}
@@ -221,29 +226,31 @@ export default function Game() {
 						{sign}
 					</div>
 				))}
+				<div className='final-item'>
+					<button
+						className='reset-btn'
+						onClick={() => {
+							userSign.current = '';
+							setSettings(DEFAULT_SETTINGS);
+							setGameState([
+								{ sign: '', colorValue: '' },
+								{ sign: '', colorValue: '' },
+								{ sign: '', colorValue: '' },
+								{ sign: '', colorValue: '' },
+								{ sign: '', colorValue: '' },
+								{ sign: '', colorValue: '' },
+								{ sign: '', colorValue: '' },
+								{ sign: '', colorValue: '' },
+								{ sign: '', colorValue: '' },
+							]);
+							setResult('');
+							setClicked(true);
+						}}
+					>
+						Reset Game
+					</button>
+				</div>
 			</div>
-			<p>{result}</p>
-			<button
-				onClick={() => {
-					userSign.current = '';
-					setSettings(DEFAULT_SETTINGS);
-					setGameState([
-						{ sign: '', colorValue: '' },
-						{ sign: '', colorValue: '' },
-						{ sign: '', colorValue: '' },
-						{ sign: '', colorValue: '' },
-						{ sign: '', colorValue: '' },
-						{ sign: '', colorValue: '' },
-						{ sign: '', colorValue: '' },
-						{ sign: '', colorValue: '' },
-						{ sign: '', colorValue: '' },
-					]);
-					setResult('');
-					setClicked(true);
-				}}
-			>
-				Reset Game
-			</button>
 		</>
 	);
 }
