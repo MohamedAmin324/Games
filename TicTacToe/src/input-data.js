@@ -54,4 +54,16 @@ const DEFAULT_SETTINGS = {
     userTurn: true,
 }
 
-export { signOptions, modeOptions, turnsOptions, DEFAULT_SETTINGS };
+const INITIAL_GAME_STATE = [
+    { sign: '', colorValue: '' },
+    { sign: '', colorValue: '' },
+    { sign: '', colorValue: '' },
+    { sign: '', colorValue: '' },
+    { sign: '', colorValue: '' },
+    { sign: '', colorValue: '' },
+    { sign: '', colorValue: '' },
+    { sign: '', colorValue: '' },
+    { sign: '', colorValue: '' },
+]
+
+export { signOptions, modeOptions, turnsOptions, DEFAULT_SETTINGS, INITIAL_GAME_STATE };

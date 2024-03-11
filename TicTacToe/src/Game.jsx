@@ -3,6 +3,7 @@ import FormInput from './components/FormInput';
 
 import {
 	DEFAULT_SETTINGS,
+	INITIAL_GAME_STATE,
 	modeOptions,
 	signOptions,
 	turnsOptions,
@@ -17,17 +18,9 @@ import {
 } from './util';
 
 export default function Game() {
-	const [gameState, setGameState] = useState([
-		{ sign: '', colorValue: '' },
-		{ sign: '', colorValue: '' },
-		{ sign: '', colorValue: '' },
-		{ sign: '', colorValue: '' },
-		{ sign: '', colorValue: '' },
-		{ sign: '', colorValue: '' },
-		{ sign: '', colorValue: '' },
-		{ sign: '', colorValue: '' },
-		{ sign: '', colorValue: '' },
-	]);
+	const [clicked, setClicked] = useState(false);
+
+	const [gameState, setGameState] = useState(INITIAL_GAME_STATE);
 
 	const [settings, setSettings] = useState(DEFAULT_SETTINGS);
 
@@ -98,6 +91,7 @@ export default function Game() {
 
 	useEffect(() => {
 		if (gameState.every(({ sign }) => sign === '')) return;
+		if (gameState.every(({ sign }) => sign !== '') && result !== '') return;
 		if (!checkGameStatus(gameState)) return;
 		const rowsStatus = testRows(gameState);
 		const columnsStatus = testColumns(gameState);
@@ -188,6 +182,13 @@ export default function Game() {
 		});
 	}, [gameState]);
 
+	useEffect(() => {
+		if (!clicked) return;
+		const formInputs = document.querySelectorAll('input');
+		formInputs.forEach((input) => (input.checked = false));
+		setClicked(false);
+	}, [clicked]);
+
 	return (
 		<>
 			<FormInput
@@ -222,6 +223,27 @@ export default function Game() {
 				))}
 			</div>
 			<p>{result}</p>
+			<button
+				onClick={() => {
+					userSign.current = '';
+					setSettings(DEFAULT_SETTINGS);
+					setGameState([
+						{ sign: '', colorValue: '' },
+						{ sign: '', colorValue: '' },
+						{ sign: '', colorValue: '' },
+						{ sign: '', colorValue: '' },
+						{ sign: '', colorValue: '' },
+						{ sign: '', colorValue: '' },
+						{ sign: '', colorValue: '' },
+						{ sign: '', colorValue: '' },
+						{ sign: '', colorValue: '' },
+					]);
+					setResult('');
+					setClicked(true);
+				}}
+			>
+				Reset Game
+			</button>
 		</>
 	);
 }
