@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import FormInput from './components/FormInput';
 import { modeOptions, signOptions, turnsOptions } from './input-data';
+import { checkGameStatus, testColumns, testDiagonals, testRows } from './util';
 
-export default function App() {
+export default function Game() {
 	const [gameState, setGameState] = useState([
 		{ sign: '', colorValue: '' },
 		{ sign: '', colorValue: '' },
@@ -27,14 +28,17 @@ export default function App() {
 		setSettings({ ...settings, ...userInput });
 
 	function handleClick({ target: { innerText, dataset } }) {
-		if (innerText !== '') return;
 		const { mode, sign, userTurn } = settings;
+
+		if (gameState.every(({ sign }) => sign !== '')) return;
+		if (innerText !== '') return;
+
+		if (mode === '') return;
 
 		if (mode === 'single-player') {
 			if (!userTurn) return;
 		}
 		if (sign === '') return;
-		if (gameState.every(({ sign }) => sign !== '')) return;
 
 		const itemIndex = dataset.index;
 		gameState[itemIndex].sign = sign;
@@ -50,10 +54,11 @@ export default function App() {
 	useEffect(() => {
 		const { mode, sign, userTurn } = settings;
 
+		if (gameState.every(({ sign }) => sign !== '')) return;
+
 		if (mode !== 'single-player') return;
 		if (sign === '') return;
 		if (userTurn) return;
-		if (gameState.every(({ sign }) => sign !== '')) return;
 
 		let computerChoice;
 		do {
@@ -69,26 +74,32 @@ export default function App() {
 				sign: sign === 'X' ? 'O' : 'X',
 				userTurn: true,
 			});
-		}, 300);
+		}, 400);
 
 		return () => clearTimeout(timer);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [settings]);
 
 	useEffect(() => {
-		if (gameState.every(({ sign }) => sign !== '')) return;
+		if (gameState.every(({ sign }) => sign === '')) return;
+		if (!checkGameStatus(gameState)) return;
+		console.log(
+			testColumns(gameState),
+			testDiagonals(gameState),
+			testRows(gameState)
+		);
 	}, [gameState]);
 
 	return (
 		<>
 			<FormInput
-				formLabel='choose a play mode'
+				formLabel='choose a play mode:'
 				options={modeOptions}
 				updateSettings={updateSettings}
 			/>
 			{settings.mode === 'single-player' && (
 				<FormInput
-					formLabel='Go First'
+					formLabel='Do you want to go first?:'
 					options={turnsOptions}
 					updateSettings={updateSettings}
 				/>
