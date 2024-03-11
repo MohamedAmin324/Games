@@ -1,6 +1,10 @@
-// eslint-disable-next-line react/prop-types
-export default function FormInput({ formLabel, options, updateSettings }) {
-	
+/* eslint-disable react/prop-types */
+export default function FormInput({
+	formLabel,
+	options,
+	updateSettings,
+	setUserSign,
+}) {
 	const handleClick = ({ target: { name, value } }) => {
 		const selectedSettings = ['true', 'false'].includes(value)
 			? value === 'true'
@@ -10,6 +14,8 @@ export default function FormInput({ formLabel, options, updateSettings }) {
 			[changedParameter]: selectedSettings,
 		};
 		updateSettings(updatedInfo);
+
+		name === 'sign' && setUserSign(value);
 	};
 
 	return (

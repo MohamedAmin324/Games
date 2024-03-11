@@ -49,4 +49,9 @@ const turnsOptions = [
     }
 ]
 
-export { signOptions, modeOptions, turnsOptions };
+const DEFAULT_SETTINGS = {
+    mode: '',
+    userTurn: true,
+}
+
+export { signOptions, modeOptions, turnsOptions, DEFAULT_SETTINGS };

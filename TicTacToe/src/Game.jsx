@@ -1,6 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import FormInput from './components/FormInput';
-import { modeOptions, signOptions, turnsOptions } from './input-data';
+import {
+	DEFAULT_SETTINGS,
+	modeOptions,
+	signOptions,
+	turnsOptions,
+} from './input-data';
 import { checkGameStatus, testColumns, testDiagonals, testRows } from './util';
 
 export default function Game() {
@@ -16,19 +21,18 @@ export default function Game() {
 		{ sign: '', colorValue: '' },
 	]);
 
-	const [settings, setSettings] = useState({
-		mode: '',
-		userTurn: true,
-		sign: '',
-	});
+	const [settings, setSettings] = useState(DEFAULT_SETTINGS);
 
-	// const [result, setResult] = useState();
+	const userSign = useRef('');
+	const setUserSign = (dataInput) => (userSign.current = dataInput);
+
+	const [result, setResult] = useState('');
 
 	const updateSettings = (userInput) =>
 		setSettings({ ...settings, ...userInput });
 
 	function handleClick({ target: { innerText, dataset } }) {
-		const { mode, sign, userTurn } = settings;
+		const { mode, userTurn } = settings;
 
 		if (gameState.every(({ sign }) => sign !== '')) return;
 		if (innerText !== '') return;
@@ -38,26 +42,30 @@ export default function Game() {
 		if (mode === 'single-player') {
 			if (!userTurn) return;
 		}
-		if (sign === '') return;
+		if (userSign.current === '') return;
 
 		const itemIndex = dataset.index;
-		gameState[itemIndex].sign = sign;
-		gameState[itemIndex].colorValue = sign === 'X' ? 'red' : 'blue';
+		gameState[itemIndex].sign = userTurn
+			? userSign.current
+			: userSign.current === 'X'
+			? 'O'
+			: 'X';
+		gameState[itemIndex].colorValue =
+			gameState[itemIndex].sign === 'X' ? 'red' : 'blue';
 		setGameState([...gameState]);
 		setSettings({
 			...settings,
-			sign: sign === 'X' ? 'O' : 'X',
-			userTurn: false,
+			userTurn: !userTurn,
 		});
 	}
 
 	useEffect(() => {
-		const { mode, sign, userTurn } = settings;
+		const { mode, userTurn } = settings;
 
 		if (gameState.every(({ sign }) => sign !== '')) return;
 
-		if (mode !== 'single-player') return;
-		if (sign === '') return;
+		if (mode === '2-players') return;
+		if (userSign.current === '') return;
 		if (userTurn) return;
 
 		let computerChoice;
@@ -66,12 +74,12 @@ export default function Game() {
 		} while (gameState[computerChoice].sign !== '');
 
 		const timer = setTimeout(() => {
-			gameState[computerChoice].sign = sign;
-			gameState[computerChoice].colorValue = sign === 'X' ? 'red' : 'blue';
+			gameState[computerChoice].sign = userSign.current === 'X' ? 'O' : 'X';
+			gameState[computerChoice].colorValue =
+				gameState[computerChoice].sign === 'X' ? 'red' : 'blue';
 			setGameState([...gameState]);
 			setSettings({
 				...settings,
-				sign: sign === 'X' ? 'O' : 'X',
 				userTurn: true,
 			});
 		}, 400);
@@ -83,11 +91,58 @@ export default function Game() {
 	useEffect(() => {
 		if (gameState.every(({ sign }) => sign === '')) return;
 		if (!checkGameStatus(gameState)) return;
-		console.log(
-			testColumns(gameState),
-			testDiagonals(gameState),
-			testRows(gameState)
-		);
+
+		testColumns(gameState).forEach((status) => {
+			if (!status) return;
+
+			setResult(
+				`${
+					status === userSign.current
+						? settings.mode === 'single-player'
+							? 'You win'
+							: 'Player 1 wins'
+						: settings.mode === 'single-player'
+						? 'computer wins'
+						: 'player 2 wins'
+				}`
+			);
+
+			setSettings(DEFAULT_SETTINGS);
+		});
+		testDiagonals(gameState).forEach((status) => {
+			if (!status) return;
+
+			setResult(
+				`${
+					status === userSign.current
+						? settings.mode === 'single-player'
+							? 'You win'
+							: 'Player 1 wins'
+						: settings.mode === 'single-player'
+						? 'computer wins'
+						: 'player 2 wins'
+				}`
+			);
+
+			setSettings(DEFAULT_SETTINGS);
+		});
+		testRows(gameState).forEach((status) => {
+			if (!status) return;
+
+			setResult(
+				`${
+					status === userSign.current
+						? settings.mode === 'single-player'
+							? 'You win'
+							: 'Player 1 wins'
+						: settings.mode === 'single-player'
+						? 'computer wins'
+						: 'player 2 wins'
+				}`
+			);
+
+			setSettings(DEFAULT_SETTINGS);
+		});
 	}, [gameState]);
 
 	return (
@@ -106,6 +161,7 @@ export default function Game() {
 			)}
 			<FormInput
 				formLabel='choose a sign:'
+				setUserSign={setUserSign}
 				updateSettings={updateSettings}
 				options={signOptions}
 			/>
@@ -122,6 +178,7 @@ export default function Game() {
 					</div>
 				))}
 			</div>
+			<p>{result}</p>
 		</>
 	);
 }
