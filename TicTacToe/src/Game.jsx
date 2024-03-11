@@ -71,6 +71,7 @@ export default function Game() {
 
 		let computerChoice;
 		do {
+			console.log(computerChoice);
 			computerChoice = Math.floor(Math.random() * 8);
 		} while (gameState[computerChoice].sign !== '');
 
@@ -81,7 +82,7 @@ export default function Game() {
 			setGameState([...gameState]);
 			setSettings({
 				...settings,
-				userTurn: true,
+				userTurn: !userTurn,
 			});
 		}, 400);
 
@@ -98,87 +99,92 @@ export default function Game() {
 		const diagonalStatus = testDiagonals(gameState);
 
 		columnsStatus.forEach((winnerSign) => {
+			if (winnerSign) {
+				setResult(
+					`${
+						winnerSign === userSign.current
+							? settings.mode === 'single-player'
+								? 'You win'
+								: 'Player 1 wins'
+							: settings.mode === 'single-player'
+							? 'computer wins'
+							: 'player 2 wins'
+					}`
+				);
+
+				setSettings(DEFAULT_SETTINGS);
+			}
+
 			if (
 				result === '' &&
 				checkLineStatus(columnsStatus) &&
+				checkLineStatus(rowsStatus) &&
+				checkLineStatus(diagonalStatus) &&
 				gameState.every(({ sign }) => sign !== '')
 			) {
 				setResult('It is a Draw');
 				setSettings(DEFAULT_SETTINGS);
 				return;
 			}
-
-			if (!winnerSign) return;
-
-			setResult(
-				`${
-					winnerSign === userSign.current
-						? settings.mode === 'single-player'
-							? 'You win'
-							: 'Player 1 wins'
-						: settings.mode === 'single-player'
-						? 'computer wins'
-						: 'player 2 wins'
-				}`
-			);
-
-			setSettings(DEFAULT_SETTINGS);
 		});
 
 		diagonalStatus.forEach((winnerSign) => {
-			if (
-				result === '' &&
-				checkLineStatus(columnsStatus) &&
-				gameState.every(({ sign }) => sign !== '')
-			) {
-				setResult('It is a Draw');
+			if (winnerSign) {
+				setResult(
+					`${
+						winnerSign === userSign.current
+							? settings.mode === 'single-player'
+								? 'You win'
+								: 'Player 1 wins'
+							: settings.mode === 'single-player'
+							? 'computer wins'
+							: 'player 2 wins'
+					}`
+				);
+
 				setSettings(DEFAULT_SETTINGS);
 				return;
 			}
 
-			if (!winnerSign) return;
-
-			setResult(
-				`${
-					winnerSign === userSign.current
-						? settings.mode === 'single-player'
-							? 'You win'
-							: 'Player 1 wins'
-						: settings.mode === 'single-player'
-						? 'computer wins'
-						: 'player 2 wins'
-				}`
-			);
-
-			setSettings(DEFAULT_SETTINGS);
+			if (
+				result === '' &&
+				checkLineStatus(diagonalStatus) &&
+				checkLineStatus(rowsStatus) &&
+				checkLineStatus(diagonalStatus) &&
+				gameState.every(({ sign }) => sign !== '')
+			) {
+				setResult('It is a Draw');
+				setSettings(DEFAULT_SETTINGS);
+			}
 		});
 
 		rowsStatus.forEach((winnerSign) => {
+			if (winnerSign) {
+				setResult(
+					`${
+						winnerSign === userSign.current
+							? settings.mode === 'single-player'
+								? 'You win'
+								: 'Player 1 wins'
+							: settings.mode === 'single-player'
+							? 'Computer wins'
+							: 'Player 2 wins'
+					}`
+				);
+
+				setSettings(DEFAULT_SETTINGS);
+			}
+
 			if (
 				result === '' &&
-				checkLineStatus(columnsStatus) &&
+				checkLineStatus(rowsStatus) &&
+				checkLineStatus(rowsStatus) &&
+				checkLineStatus(diagonalStatus) &&
 				gameState.every(({ sign }) => sign !== '')
 			) {
 				setResult('It is a Draw');
 				setSettings(DEFAULT_SETTINGS);
-				return;
 			}
-
-			if (!winnerSign) return;
-
-			setResult(
-				`${
-					winnerSign === userSign.current
-						? settings.mode === 'single-player'
-							? 'You win'
-							: 'Player 1 wins'
-						: settings.mode === 'single-player'
-						? 'Computer wins'
-						: 'Player 2 wins'
-				}`
-			);
-
-			setSettings(DEFAULT_SETTINGS);
 		});
 	}, [gameState]);
 
@@ -212,6 +218,18 @@ export default function Game() {
 					options={signOptions}
 				/>
 				<p className='result-panel'>{result}</p>
+				<ul className='info-panel'>
+					<li>All the options must be filled before the game can begin</li>
+					<li>
+						You can choose between 2 players & 1 player, going with 1 player
+						will make you play against the computer
+					</li>
+					<li>The game may inaccurate final results</li>
+					<li>
+						In 2 players mode, Whoever chooses a sign is automatically the 1
+						player
+					</li>
+				</ul>
 			</div>
 
 			<div className='container grid-container'>

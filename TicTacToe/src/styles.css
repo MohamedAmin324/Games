@@ -11,6 +11,11 @@
     box-sizing: border-box;
 }
 
+ul {
+    padding-inline: 0;
+    margin-block: 0;
+}
+
 /* Google Fonts utility functions */
 
 .merriweather-regular {
@@ -89,9 +94,13 @@ div.form-container {
     scale: 1.1;
 }
 
+.info-panel > li:not(:last-child) {
+    margin-bottom: 10px;
+}
+
 @media (width > 768px) {
     .container {
-        width: 50%;
+        min-width: 50%;
     }
 }
 
