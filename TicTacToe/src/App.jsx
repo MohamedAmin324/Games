@@ -21,20 +21,22 @@ export default function App() {
 		sign: '',
 	});
 
+	// const [result, setResult] = useState();
+
 	const updateSettings = (userInput) =>
 		setSettings({ ...settings, ...userInput });
 
-
-	function handleClick(e) {
-		const { mode, sign, userTurn: isUserTurn } = settings;
+	function handleClick({ target: { innerText, dataset } }) {
+		if (innerText !== '') return;
+		const { mode, sign, userTurn } = settings;
 
 		if (mode === 'single-player') {
-			if (!isUserTurn) return;
+			if (!userTurn) return;
 		}
 		if (sign === '') return;
 		if (gameState.every(({ sign }) => sign !== '')) return;
 
-		const itemIndex = e.target.dataset.index;
+		const itemIndex = dataset.index;
 		gameState[itemIndex].sign = sign;
 		gameState[itemIndex].colorValue = sign === 'X' ? 'red' : 'blue';
 		setGameState([...gameState]);
@@ -46,19 +48,19 @@ export default function App() {
 	}
 
 	useEffect(() => {
-		const { mode, sign, userTurn: isUserTurn } = settings;
+		const { mode, sign, userTurn } = settings;
 
 		if (mode !== 'single-player') return;
 		if (sign === '') return;
-		if (isUserTurn) return;
+		if (userTurn) return;
 		if (gameState.every(({ sign }) => sign !== '')) return;
-		
+
 		let computerChoice;
 		do {
 			computerChoice = Math.floor(Math.random() * 8);
 		} while (gameState[computerChoice].sign !== '');
 
-		setTimeout(() => {
+		const timer = setTimeout(() => {
 			gameState[computerChoice].sign = sign;
 			gameState[computerChoice].colorValue = sign === 'X' ? 'red' : 'blue';
 			setGameState([...gameState]);
@@ -67,9 +69,15 @@ export default function App() {
 				sign: sign === 'X' ? 'O' : 'X',
 				userTurn: true,
 			});
-		}, 500);
+		}, 300);
+
+		return () => clearTimeout(timer);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [settings]);
+
+	useEffect(() => {
+		if (gameState.every(({ sign }) => sign !== '')) return;
+	}, [gameState]);
 
 	return (
 		<>
