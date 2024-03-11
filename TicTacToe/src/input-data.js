@@ -4,14 +4,14 @@ const signOptions = [
         id: 'x-sign',
         name: 'sign',
         value: 'X',
-        labelText: 'X:',
+        labelText: 'X',
     },
     {
         htmlFor: 'o-sign',
         id: 'o-sign',
         name: 'sign',
         value: 'O',
-        labelText: 'O:',
+        labelText: 'O',
     }
 ]
 
@@ -21,7 +21,7 @@ const modeOptions = [
         id: "single-player",
         name: "mode",
         value: "single-player",
-        labelText: "single-player (against the computer)",
+        labelText: "1 player",
     },
     {
         htmlFor: "2-players",

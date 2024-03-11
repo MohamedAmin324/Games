@@ -191,22 +191,22 @@ export default function Game() {
 
 	return (
 		<>
-			<div className=''>
+			<div>
 				<h1 className='oswald'>Tic Tac Toe</h1>
 				<FormInput
-					formLabel='choose a play mode:'
+					formLabel='Number of players:'
 					options={modeOptions}
 					updateSettings={updateSettings}
 				/>
 				{settings.mode === 'single-player' && (
 					<FormInput
-						formLabel='Do you want to go first?:'
+						formLabel='Go first?:'
 						options={turnsOptions}
 						updateSettings={updateSettings}
 					/>
 				)}
 				<FormInput
-					formLabel='choose a sign:'
+					formLabel='Choose a sign:'
 					setUserSign={setUserSign}
 					updateSettings={updateSettings}
 					options={signOptions}

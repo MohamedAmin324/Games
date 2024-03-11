@@ -25,8 +25,8 @@ export default function FormInput({
 			{/* eslint-disable-next-line react/prop-types*/}
 			{options.map(({ htmlFor, labelText, ...inputSettings }, index) => (
 				<label key={index} htmlFor={htmlFor}>
-					{labelText}
 					<input onChange={handleClick} type='radio' {...inputSettings} />
+					{labelText}
 				</label>
 			))}
 		</div>
