@@ -1,6 +1,9 @@
 // check that there is at least 3 used cells to make the gamePlay eligible for verification
 const checkGameStatus = (gamePlay) => gamePlay.filter(({ sign }) => sign !== '').length >= 3;
 
+// check if a line in the grid does not have a sign match
+const checkLineStatus = (line) => line.every((cell) => !cell);
+
 
 function testRows(gamePlay) {
     return [
@@ -25,4 +28,4 @@ function testDiagonals(gamePlay) {
     ]
 }
 
-export { checkGameStatus, testRows, testColumns, testDiagonals }
+export { checkGameStatus, testRows, testColumns, testDiagonals, checkLineStatus }

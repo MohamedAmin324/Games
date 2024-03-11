@@ -1,12 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
 import FormInput from './components/FormInput';
+
 import {
 	DEFAULT_SETTINGS,
 	modeOptions,
 	signOptions,
 	turnsOptions,
 } from './input-data';
-import { checkGameStatus, testColumns, testDiagonals, testRows } from './util';
+
+import {
+	checkGameStatus,
+	checkLineStatus,
+	testColumns,
+	testDiagonals,
+	testRows,
+} from './util';
 
 export default function Game() {
 	const [gameState, setGameState] = useState([
@@ -91,13 +99,26 @@ export default function Game() {
 	useEffect(() => {
 		if (gameState.every(({ sign }) => sign === '')) return;
 		if (!checkGameStatus(gameState)) return;
+		const rowsStatus = testRows(gameState);
+		const columnsStatus = testColumns(gameState);
+		const diagonalStatus = testDiagonals(gameState);
 
-		testColumns(gameState).forEach((status) => {
-			if (!status) return;
+		columnsStatus.forEach((winnerSign) => {
+			if (
+				result === '' &&
+				checkLineStatus(columnsStatus) &&
+				gameState.every(({ sign }) => sign !== '')
+			) {
+				setResult('It is a Draw');
+				setSettings(DEFAULT_SETTINGS);
+				return;
+			}
+
+			if (!winnerSign) return;
 
 			setResult(
 				`${
-					status === userSign.current
+					winnerSign === userSign.current
 						? settings.mode === 'single-player'
 							? 'You win'
 							: 'Player 1 wins'
@@ -109,12 +130,23 @@ export default function Game() {
 
 			setSettings(DEFAULT_SETTINGS);
 		});
-		testDiagonals(gameState).forEach((status) => {
-			if (!status) return;
+
+		diagonalStatus.forEach((winnerSign) => {
+			if (
+				result === '' &&
+				checkLineStatus(columnsStatus) &&
+				gameState.every(({ sign }) => sign !== '')
+			) {
+				setResult('It is a Draw');
+				setSettings(DEFAULT_SETTINGS);
+				return;
+			}
+
+			if (!winnerSign) return;
 
 			setResult(
 				`${
-					status === userSign.current
+					winnerSign === userSign.current
 						? settings.mode === 'single-player'
 							? 'You win'
 							: 'Player 1 wins'
@@ -126,18 +158,29 @@ export default function Game() {
 
 			setSettings(DEFAULT_SETTINGS);
 		});
-		testRows(gameState).forEach((status) => {
-			if (!status) return;
+
+		rowsStatus.forEach((winnerSign) => {
+			if (
+				result === '' &&
+				checkLineStatus(columnsStatus) &&
+				gameState.every(({ sign }) => sign !== '')
+			) {
+				setResult('It is a Draw');
+				setSettings(DEFAULT_SETTINGS);
+				return;
+			}
+
+			if (!winnerSign) return;
 
 			setResult(
 				`${
-					status === userSign.current
+					winnerSign === userSign.current
 						? settings.mode === 'single-player'
 							? 'You win'
 							: 'Player 1 wins'
 						: settings.mode === 'single-player'
-						? 'computer wins'
-						: 'player 2 wins'
+						? 'Computer wins'
+						: 'Player 2 wins'
 				}`
 			);
 
