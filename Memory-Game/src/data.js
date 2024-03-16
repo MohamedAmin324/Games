@@ -7,6 +7,16 @@ import JavaScript from "./assets/js-svgrepo-com.svg";
 import linux from "./assets/linux-svgrepo-com.svg";
 import react from "./assets/react-svgrepo-com.svg";
 const SUBJECTS = 8;
+const INITIAL_MATCH_STATUS = {
+    firstCard: {
+        imgUrl: null,
+        element: null,
+    },
+    secondCard: {
+        imgUrl: null,
+        element: null,
+    },
+}
 
 const ASSETS = [ball, camera, car, diamond, hand, JavaScript, linux, react];
 
@@ -26,4 +36,8 @@ function generateGameList() {
     return gameList;
 }
 
-export { generateGameList }
+const checkCardValidity = ({ imgUrl, element }) => imgUrl && element;
+const alreadyClicked = (targetElement, firstCard, secondCard) => firstCard.element === targetElement || secondCard.element === targetElement;
+const isEqual = (obj1, obj2) => (obj1.imgUrl === obj2.imgUrl && obj1.element === obj2.element);
+
+export { generateGameList, INITIAL_MATCH_STATUS, isEqual, checkCardValidity, alreadyClicked }

@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import Settings from './Game.jsx';
+import Game from './Game.jsx';
 import './styles.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<React.StrictMode>
-		<Settings />
+		<h1>Memory Game</h1>
+		<Game />
 	</React.StrictMode>
 );
