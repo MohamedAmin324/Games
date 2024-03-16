@@ -1,8 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useRef, useState } from 'react';
-import { alreadyClicked, isEqual } from './data';
+import { alreadyClicked, checkCardValidity, isEqual } from './data';
 
-export default function Card({ imgUrl, matchObj, updateMatchState }) {
+export default function Card({
+	imgUrl,
+	matchObj,
+	updateMatchState,
+	forceReset,
+}) {
 	const { firstCard, secondCard } = matchObj;
 	const divRef = useRef(null);
 	const [isHidden, setIsHidden] = useState(true);
@@ -11,12 +16,21 @@ export default function Card({ imgUrl, matchObj, updateMatchState }) {
 		setIsHidden(divRef.current?.classList.contains('hidden'));
 	}, [matchObj]);
 
+	useEffect(() => {
+		if (!forceReset) return;
+		divRef.current.classList.remove('invisible');
+		divRef.current.classList.add('hidden');
+	}, [forceReset]);
+
 	return (
 		<div
 			className={isHidden ? 'hidden' : ''}
 			ref={divRef}
 			onClick={({ target }) => {
 				if (alreadyClicked(target, firstCard, secondCard)) return;
+
+				if (checkCardValidity(firstCard) && checkCardValidity(secondCard))
+					return;
 
 				setIsHidden((prev) => !prev);
 				const initialValue = firstCard;

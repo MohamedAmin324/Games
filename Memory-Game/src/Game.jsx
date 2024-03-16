@@ -4,7 +4,9 @@ import Card from './Card';
 
 export default function Game() {
 	const [list, setList] = useState(() => generateGameList());
+	const [moves, setMoves] = useState(0);
 	const [matchObj, setMatchObj] = useState(INITIAL_MATCH_STATUS);
+	const [forceReset, setForceReset] = useState(false);
 
 	const updateMatchState = (newState) =>
 		setMatchObj((prev) => {
@@ -13,6 +15,7 @@ export default function Game() {
 
 	useEffect(() => {
 		if (!matchObj.firstCard.element || !matchObj.secondCard.element) return;
+		setForceReset(false);
 		if (
 			matchObj.firstCard.element.classList.contains('hidden') ||
 			matchObj.secondCard.element.classList.contains('hidden')
@@ -29,21 +32,37 @@ export default function Game() {
 			matchObj.secondCard.element.classList.toggle('invisible', matchFound);
 
 			setMatchObj({ ...INITIAL_MATCH_STATUS });
+			setMoves((prev) => prev + 1);
 		}, 1000);
 
 		return () => clearTimeout(timer);
 	}, [matchObj]);
 
 	return (
-		<div className='game-container'>
-			{list.map((img, index) => (
-				<Card
-					matchObj={matchObj}
-					key={index}
-					imgUrl={img}
-					updateMatchState={updateMatchState}
-				/>
-			))}
-		</div>
+		<>
+			<h1>Memory Game</h1>
+			<div className='game-container'>
+				{list.map((img, index) => (
+					<Card
+						matchObj={matchObj}
+						key={index}
+						imgUrl={img}
+						updateMatchState={updateMatchState}
+						forceReset={forceReset}
+					/>
+				))}
+			</div>
+			<p>Number of Moves: {moves}</p>
+			<button
+				onClick={() => {
+					setList(generateGameList());
+					setMatchObj(INITIAL_MATCH_STATUS);
+					setMoves(0);
+					setForceReset(true);
+				}}
+			>
+				Reset Game
+			</button>
+		</>
 	);
 }
