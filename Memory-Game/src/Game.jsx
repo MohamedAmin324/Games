@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { INITIAL_MATCH_STATUS, generateGameList } from './data';
+import { INITIAL_MATCH_STATUS, generateGameList } from './util';
 import Card from './Card';
 
 export default function Game() {
@@ -52,8 +52,9 @@ export default function Game() {
 					/>
 				))}
 			</div>
-			<p>Number of Moves: {moves}</p>
+			<p className='moves-panel'>Number of Moves: {moves}</p>
 			<button
+				className='reset-btn'
 				onClick={() => {
 					setList(generateGameList());
 					setMatchObj(INITIAL_MATCH_STATUS);
@@ -61,7 +62,7 @@ export default function Game() {
 					setForceReset(true);
 				}}
 			>
-				Reset Game
+				Reset
 			</button>
 		</>
 	);

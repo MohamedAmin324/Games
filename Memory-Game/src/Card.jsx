@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useRef, useState } from 'react';
-import { alreadyClicked, checkCardValidity, isEqual } from './data';
+import { alreadyClicked, checkCardValidity, isEqual } from './util';
 
 export default function Card({
 	imgUrl,

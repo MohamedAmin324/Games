@@ -6,7 +6,7 @@ import hand from "./assets/hand-with-fingers-splayed-medium-dark-skin-tone-svgre
 import JavaScript from "./assets/js-svgrepo-com.svg";
 import linux from "./assets/linux-svgrepo-com.svg";
 import react from "./assets/react-svgrepo-com.svg";
-const SUBJECTS = 8;
+const CARDS_NUMBER = 8;
 const INITIAL_MATCH_STATUS = {
     firstCard: {
         imgUrl: null,
@@ -28,7 +28,7 @@ function generateGameList() {
         for (let index = 0; index < 2; index++) {
             let randomIndex;
             do {
-                randomIndex = generateRandomIndex(SUBJECTS * 2);
+                randomIndex = generateRandomIndex(CARDS_NUMBER * 2);
             } while (gameList[randomIndex] !== undefined)
             gameList[randomIndex] = img;
         }
